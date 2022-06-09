@@ -44,25 +44,14 @@ const AutoComplete = ({
     setSearchValue("");
   };
 
-  const scrollToTheFirstItem = (): void => {
-    const el = document.querySelector('[data-id="' + resultsList[0] + '"]');
-
-    el?.scrollIntoView({
-      behavior: "smooth",
-      block: "center",
-      inline: "nearest",
-    });
-  };
-
-  const scrollToTheSelectedItem = (): void => {
+  const scrollToTheItem = (itemIndex: number): void => {
     const el = document.querySelector(
-      '[data-id="' + resultsList[selectedItem] + '"]'
+      '[data-id="' + resultsList[itemIndex] + '"]'
     );
 
     el?.scrollIntoView({
-      behavior: "smooth",
       block: "center",
-      inline: "nearest",
+      behavior: "smooth",
     });
   };
 
@@ -82,13 +71,13 @@ const AutoComplete = ({
       if (selectedItem !== resultsList.length - 1) {
         setSelectedItem((selectedItem) => selectedItem + 1);
 
-        scrollToTheSelectedItem();
+        scrollToTheItem(selectedItem);
       }
     } else if (key === "ArrowUp") {
-      if (selectedItem !== -1) {
+      if (selectedItem !== 0) {
         setSelectedItem((selectedItem) => selectedItem - 1);
 
-        scrollToTheSelectedItem();
+        scrollToTheItem(selectedItem);
       }
     }
   };
@@ -100,7 +89,7 @@ const AutoComplete = ({
   useEffect(() => {
     onSearchParamChange(debouncedSearchParam);
 
-    scrollToTheFirstItem();
+    scrollToTheItem(0);
   }, [debouncedSearchParam]);
 
   // create an outside click listener
@@ -138,7 +127,7 @@ const AutoComplete = ({
     isLoading ? <Loader additionalClassName="autocomplete-loader" /> : null;
 
   const renderResultsList = () =>
-    isFocused ? (
+    isFocused && !isLoading ? (
       <ul className="autocomplete-results">
         {resultsList.length ? (
           resultsList.map((result, resultIndex) => {
