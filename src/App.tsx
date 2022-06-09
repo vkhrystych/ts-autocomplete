@@ -21,7 +21,9 @@ function App() {
       setIsCountryListLoading(true);
     }
 
-    const updatedCountryList = await getCountryBySearchParam(searchParam);
+    const updatedCountryList: string[] = await getCountryBySearchParam(
+      searchParam
+    );
 
     setCountryList(updatedCountryList);
 

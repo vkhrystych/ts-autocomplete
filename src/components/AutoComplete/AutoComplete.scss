@@ -42,6 +42,10 @@ $autocomplete-height: 40px;
       padding: 5px 10px;
     }
 
+    &_highlight {
+      background-color: yellow;
+    }
+
     &_selected {
       background-color: #f2f2f2;
     }

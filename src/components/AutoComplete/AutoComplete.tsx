@@ -7,6 +7,7 @@ import { IAutoCompleteProps } from "./AutoCompleteTypes";
 import { useDebounce } from "../../hooks";
 
 import "./AutoComplete.scss";
+import ResultsItem from "./components/ResultsItem";
 
 const AutoComplete = ({
   isLoading,
@@ -72,13 +73,13 @@ const AutoComplete = ({
             };
 
             return (
-              <li
+              <ResultsItem
                 key={result}
-                onClick={onClickHandler}
+                text={result}
+                searchValue={searchValue}
+                onClickHandler={onClickHandler}
                 className="autocomplete-result"
-              >
-                {result}
-              </li>
+              />
             );
           })
         ) : (
