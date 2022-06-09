@@ -1,13 +1,13 @@
 import React, { useState, useRef, useEffect } from "react";
 
-import Loader from "../Loader/Loader";
+import Loader from "./components/Loader/Loader";
 
 import { IAutoCompleteProps } from "./AutoCompleteTypes";
 
 import { useDebounce } from "../../hooks";
 
 import "./AutoComplete.scss";
-import ResultsItem from "./components/ResultsItem";
+import ResultsItem from "./components/ResultsItem/ResultsItem";
 
 const AutoComplete = ({
   isLoading,
@@ -22,6 +22,10 @@ const AutoComplete = ({
 
   const autocompleteContainerRef = useRef<HTMLFormElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const onMouseEnter = (): void => {
+    setSelectedItem(-1);
+  };
 
   const onInputFocus = (): void => {
     setIsFocused(true);
@@ -157,6 +161,7 @@ const AutoComplete = ({
 
   return (
     <form
+      onMouseEnter={onMouseEnter}
       className="autocomplete"
       onSubmit={onFormSubmit}
       ref={autocompleteContainerRef}

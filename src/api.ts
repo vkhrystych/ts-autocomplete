@@ -6,7 +6,7 @@ export const getCountryBySearchParam = (
   return new Promise((resolve) => {
     setTimeout(() => {
       const resultsList = countries.filter((country) =>
-        country.includes(searchParam)
+        country.toLowerCase().includes(searchParam.toLowerCase())
       );
 
       resolve(resultsList);
