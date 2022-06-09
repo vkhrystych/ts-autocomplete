@@ -5,7 +5,7 @@ const ResultsItem = ({
   text,
   onClickHandler,
   className,
-}: IResultsItemProps) => {
+}: IResultsItemProps): JSX.Element => {
   const generateHighlightedText = (): JSX.Element => {
     if (!searchValue) {
       return <div>{text}</div>;
@@ -28,7 +28,7 @@ const ResultsItem = ({
     );
   };
 
-  const highlightedText = generateHighlightedText();
+  const highlightedText: JSX.Element = generateHighlightedText();
 
   return (
     <li

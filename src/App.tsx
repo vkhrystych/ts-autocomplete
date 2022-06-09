@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 import AutoComplete from "./components/AutoComplete/AutoComplete";
 
@@ -6,7 +6,7 @@ import { getCountryBySearchParam } from "./api";
 
 import "./App.css";
 
-function App() {
+function App(): JSX.Element {
   const [isCountryListLoading, setIsCountryListLoading] =
     useState<boolean>(false);
   const [selectedCountry, setSelectedCountry] = useState<string>("");

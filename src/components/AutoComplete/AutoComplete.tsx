@@ -1,13 +1,13 @@
 import React, { useState, useRef, useEffect } from "react";
 
 import Loader from "./components/Loader/Loader";
-
-import { IAutoCompleteProps } from "./AutoCompleteTypes";
+import ResultsItem from "./components/ResultsItem/ResultsItem";
 
 import { useDebounce } from "../../hooks";
 
+import { IAutoCompleteProps } from "./AutoCompleteTypes";
+
 import "./AutoComplete.scss";
-import ResultsItem from "./components/ResultsItem/ResultsItem";
 
 const AutoComplete = ({
   isLoading,
@@ -49,7 +49,7 @@ const AutoComplete = ({
   };
 
   const scrollToTheItem = (itemIndex: number): void => {
-    const el = document.querySelector(
+    const el: HTMLElement | null = document.querySelector(
       '[data-id="' + resultsList[itemIndex] + '"]'
     );
 
@@ -96,7 +96,6 @@ const AutoComplete = ({
     scrollToTheItem(0);
   }, [debouncedSearchParam]);
 
-  // create an outside click listener
   useEffect(() => {
     const handleClickOutside = (event: any) => {
       if (
@@ -154,7 +153,7 @@ const AutoComplete = ({
             );
           })
         ) : (
-          <div className="autocomplete-result_empty">no results :(</div>
+          <div className="autocomplete-result_empty">No results</div>
         )}
       </ul>
     ) : null;

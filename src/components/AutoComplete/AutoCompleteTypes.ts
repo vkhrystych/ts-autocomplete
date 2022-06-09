@@ -1,6 +1,6 @@
 export interface IAutoCompleteProps {
   isLoading: boolean;
-  resultsList: string[];
+  resultsList: string[] | [];
   onResultsItemClick: (itemValue: string) => void;
   onSearchParamChange: (searchParam: string) => void;
 }
