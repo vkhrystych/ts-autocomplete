@@ -37,6 +37,9 @@ $autocomplete-height: 40px;
 
   &-result {
     padding: 5px 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 
     &_empty {
       padding: 5px 10px;

@@ -34,7 +34,7 @@ function App() {
 
   return (
     <div className="app">
-      <h3>Selected country: {selectedCountry}</h3>
+      <h3>Selected country: {selectedCountry || "None"}</h3>
 
       <AutoComplete
         isLoading={isCountryListLoading}
