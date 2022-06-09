@@ -17,29 +17,90 @@ const AutoComplete = ({
 }: IAutoCompleteProps): JSX.Element => {
   const [searchValue, setSearchValue] = useState<string>("");
   const debouncedSearchParam = useDebounce<string>(searchValue, 200);
-  const [selectedItem, setSelectedItem] = useState<number | null>(null);
+  const [selectedItem, setSelectedItem] = useState<number>(-1);
   const [isFocused, setIsFocused] = useState<boolean>(false);
 
   const autocompleteContainerRef = useRef<HTMLFormElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
-  const onInputFocus = () => {
+  const onInputFocus = (): void => {
     setIsFocused(true);
   };
 
-  const onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const clearSelectedItem = (): void => {
+    setSelectedItem(-1);
+  };
+
+  const onInputChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const { value } = e.target;
 
     setSearchValue(value);
+    clearSelectedItem();
   };
 
-  const onSearchResultClick = (itemValue: string) => {
+  const onSearchResultClick = (itemValue: string): void => {
     onResultsItemClick(itemValue);
     setIsFocused(false);
     setSearchValue("");
   };
 
+  const scrollToTheFirstItem = (): void => {
+    const el = document.querySelector('[data-id="' + resultsList[0] + '"]');
+
+    el?.scrollIntoView({
+      behavior: "smooth",
+      block: "center",
+      inline: "nearest",
+    });
+  };
+
+  const scrollToTheSelectedItem = (): void => {
+    const el = document.querySelector(
+      '[data-id="' + resultsList[selectedItem] + '"]'
+    );
+
+    el?.scrollIntoView({
+      behavior: "smooth",
+      block: "center",
+      inline: "nearest",
+    });
+  };
+
+  const onInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>): void => {
+    const { key } = e;
+
+    if (key === "Enter") {
+      if (selectedItem !== -1) {
+        const itemValue = resultsList[selectedItem];
+        onSearchResultClick(itemValue);
+
+        inputRef?.current?.blur();
+
+        clearSelectedItem();
+      }
+    } else if (key === "ArrowDown") {
+      if (selectedItem !== resultsList.length - 1) {
+        setSelectedItem((selectedItem) => selectedItem + 1);
+
+        scrollToTheSelectedItem();
+      }
+    } else if (key === "ArrowUp") {
+      if (selectedItem !== -1) {
+        setSelectedItem((selectedItem) => selectedItem - 1);
+
+        scrollToTheSelectedItem();
+      }
+    }
+  };
+
+  const onFormSubmit = (e: React.KeyboardEvent<HTMLFormElement>): void => {
+    e.preventDefault();
+  };
+
   useEffect(() => {
     onSearchParamChange(debouncedSearchParam);
+
+    scrollToTheFirstItem();
   }, [debouncedSearchParam]);
 
   // create an outside click listener
@@ -60,6 +121,19 @@ const AutoComplete = ({
     };
   });
 
+  const renderInput = (): JSX.Element => (
+    <input
+      ref={inputRef}
+      maxLength={30}
+      value={searchValue}
+      onFocus={onInputFocus}
+      onChange={onInputChange}
+      onKeyDown={onInputKeyDown}
+      className="autocomplete-input"
+      placeholder="Please, enter a country"
+    />
+  );
+
   const renderLoader = (): JSX.Element | null =>
     isLoading ? <Loader additionalClassName="autocomplete-loader" /> : null;
 
@@ -67,10 +141,14 @@ const AutoComplete = ({
     isFocused ? (
       <ul className="autocomplete-results">
         {resultsList.length ? (
-          resultsList.map((result) => {
+          resultsList.map((result, resultIndex) => {
             const onClickHandler = (): void => {
               onSearchResultClick(result);
             };
+
+            const resultItemClassName: string = `autocomplete-result ${
+              resultIndex === selectedItem ? "autocomplete-result_selected" : ""
+            }`;
 
             return (
               <ResultsItem
@@ -78,7 +156,7 @@ const AutoComplete = ({
                 text={result}
                 searchValue={searchValue}
                 onClickHandler={onClickHandler}
-                className="autocomplete-result"
+                className={resultItemClassName}
               />
             );
           })
@@ -89,18 +167,13 @@ const AutoComplete = ({
     ) : null;
 
   return (
-    <form className="autocomplete" ref={autocompleteContainerRef}>
-      <input
-        placeholder="Please, enter a country"
-        className="autocomplete-input"
-        value={searchValue}
-        onFocus={onInputFocus}
-        maxLength={30}
-        onChange={onInputChange}
-      />
-
+    <form
+      className="autocomplete"
+      onSubmit={onFormSubmit}
+      ref={autocompleteContainerRef}
+    >
+      {renderInput()}
       {renderLoader()}
-
       {renderResultsList()}
     </form>
   );

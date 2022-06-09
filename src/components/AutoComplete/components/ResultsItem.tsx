@@ -31,7 +31,12 @@ const ResultsItem = ({
   const highlightedText = generateHighlightedText();
 
   return (
-    <li key={text} onClick={onClickHandler} className={className}>
+    <li
+      key={text}
+      onClick={onClickHandler}
+      data-id={text}
+      className={className}
+    >
       {highlightedText}
     </li>
   );
