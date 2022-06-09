@@ -2,6 +2,8 @@ import React, { useState, useRef, useEffect } from "react";
 
 import { IAutoCompleteProps } from "./AutoCompleteTypes";
 
+import { useDebounce } from "../../hooks";
+
 import "./AutoComplete.scss";
 
 const AutoComplete = ({
@@ -10,6 +12,7 @@ const AutoComplete = ({
   onSearchParamChange,
 }: IAutoCompleteProps) => {
   const [searchValue, setSearchValue] = useState<string>("");
+  const debouncedSearchParam = useDebounce<string>(searchValue, 200);
   const [selectedItem, setSelectedItem] = useState<number | null>(null);
   const [isFocused, setIsFocused] = useState<boolean>(false);
 
@@ -32,8 +35,8 @@ const AutoComplete = ({
   };
 
   useEffect(() => {
-    onSearchParamChange(searchValue);
-  }, [searchValue]);
+    onSearchParamChange(debouncedSearchParam);
+  }, [debouncedSearchParam]);
 
   // create an outside click listener
   useEffect(() => {
@@ -52,8 +55,6 @@ const AutoComplete = ({
       document.removeEventListener("mousedown", handleClickOutside);
     };
   });
-
-  console.log(isFocused);
 
   return (
     <form className="autocomplete" ref={autocompleteContainerRef}>

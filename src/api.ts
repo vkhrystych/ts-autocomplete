@@ -10,6 +10,6 @@ export const getCountryBySearchParam = (
       );
 
       resolve(resultsList);
-    }, 1000);
+    }, 500);
   });
 };
