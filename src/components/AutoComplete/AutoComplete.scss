@@ -25,6 +25,8 @@ $autocomplete-height: 40px;
     z-index: 2;
     list-style: none;
     top: calc($autocomplete-height - 1px);
+    max-height: 200px;
+    overflow: auto;
   }
 
   &-result {
