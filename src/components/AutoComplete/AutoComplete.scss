@@ -33,6 +33,22 @@ $autocomplete-height: 40px;
     top: calc($autocomplete-height - 1px);
     max-height: 200px;
     overflow: auto;
+
+    &::-webkit-scrollbar {
+      width: 10px;
+
+      &-thumb {
+        background: #ececec;
+        border-right: 4px white solid;
+        border-left: 3px white solid;
+        max-height: 50%;
+        height: 20%;
+      }
+
+      &-track {
+        background: #ffffff;
+      }
+    }
   }
 
   &-result {
