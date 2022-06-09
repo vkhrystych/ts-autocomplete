@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 
 import AutoComplete from "./components/AutoComplete/AutoComplete";
 
-import { getCountries } from "./api";
+import { getCountryBySearchParam } from "./api";
 
 import "./App.css";
 
@@ -10,26 +10,24 @@ function App() {
   const [selectedCountry, setSelectedCountry] = useState<string>("");
   const [countryList, setCountryList] = useState<string[] | []>([]);
 
-  useEffect(() => {
-    const fetchCountries = async () => {
-      const countries: string[] = await getCountries();
-
-      setCountryList(countries);
-    };
-
-    fetchCountries();
-  });
-
   const onCountrySelect = (country: string): void => {
     setSelectedCountry(country);
   };
 
+  const onSearchParamChange = async (searchParam: string) => {
+    const updatedCountryList = await getCountryBySearchParam(searchParam);
+
+    setCountryList(updatedCountryList);
+  };
+
   return (
     <div className="app">
+      <h3>Selected country: {selectedCountry}</h3>
+
       <AutoComplete
-        value={selectedCountry}
         resultsList={countryList}
         onResultsItemClick={onCountrySelect}
+        onSearchParamChange={onSearchParamChange}
       />
     </div>
   );

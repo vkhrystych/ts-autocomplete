@@ -1,9 +1,15 @@
 import { countries } from "./db";
 
-export const getCountries = (): Promise<string[]> => {
+export const getCountryBySearchParam = (
+  searchParam: string
+): Promise<string[]> => {
   return new Promise((resolve) => {
     setTimeout(() => {
-      resolve(countries);
+      const resultsList = countries.filter((country) =>
+        country.includes(searchParam)
+      );
+
+      resolve(resultsList);
     }, 1000);
   });
 };
