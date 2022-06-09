@@ -7,6 +7,8 @@ import { getCountryBySearchParam } from "./api";
 import "./App.css";
 
 function App() {
+  const [isCountryListLoading, setIsCountryListLoading] =
+    useState<boolean>(false);
   const [selectedCountry, setSelectedCountry] = useState<string>("");
   const [countryList, setCountryList] = useState<string[] | []>([]);
 
@@ -15,9 +17,17 @@ function App() {
   };
 
   const onSearchParamChange = async (searchParam: string) => {
+    if (searchParam) {
+      setIsCountryListLoading(true);
+    }
+
     const updatedCountryList = await getCountryBySearchParam(searchParam);
 
     setCountryList(updatedCountryList);
+
+    if (searchParam) {
+      setIsCountryListLoading(false);
+    }
   };
 
   return (
@@ -25,6 +35,7 @@ function App() {
       <h3>Selected country: {selectedCountry}</h3>
 
       <AutoComplete
+        isLoading={isCountryListLoading}
         resultsList={countryList}
         onResultsItemClick={onCountrySelect}
         onSearchParamChange={onSearchParamChange}

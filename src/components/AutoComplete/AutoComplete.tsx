@@ -1,5 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 
+import Loader from "../Loader/Loader";
+
 import { IAutoCompleteProps } from "./AutoCompleteTypes";
 
 import { useDebounce } from "../../hooks";
@@ -7,10 +9,11 @@ import { useDebounce } from "../../hooks";
 import "./AutoComplete.scss";
 
 const AutoComplete = ({
+  isLoading,
   resultsList,
   onResultsItemClick,
   onSearchParamChange,
-}: IAutoCompleteProps) => {
+}: IAutoCompleteProps): JSX.Element => {
   const [searchValue, setSearchValue] = useState<string>("");
   const debouncedSearchParam = useDebounce<string>(searchValue, 200);
   const [selectedItem, setSelectedItem] = useState<number | null>(null);
@@ -56,19 +59,14 @@ const AutoComplete = ({
     };
   });
 
-  return (
-    <form className="autocomplete" ref={autocompleteContainerRef}>
-      <input
-        placeholder="Please, enter a country"
-        className="autocomplete-input"
-        value={searchValue}
-        onFocus={onInputFocus}
-        onChange={onInputChange}
-      />
+  const renderLoader = (): JSX.Element | null =>
+    isLoading ? <Loader additionalClassName="autocomplete-loader" /> : null;
 
-      {resultsList && isFocused && (
-        <ul className="autocomplete-results">
-          {resultsList.map((result) => {
+  const renderResultsList = () =>
+    isFocused ? (
+      <ul className="autocomplete-results">
+        {resultsList.length ? (
+          resultsList.map((result) => {
             const onClickHandler = (): void => {
               onSearchResultClick(result);
             };
@@ -76,15 +74,33 @@ const AutoComplete = ({
             return (
               <li
                 key={result}
-                className="autocomplete-result"
                 onClick={onClickHandler}
+                className="autocomplete-result"
               >
                 {result}
               </li>
             );
-          })}
-        </ul>
-      )}
+          })
+        ) : (
+          <div className="autocomplete-result_empty">no results :(</div>
+        )}
+      </ul>
+    ) : null;
+
+  return (
+    <form className="autocomplete" ref={autocompleteContainerRef}>
+      <input
+        placeholder="Please, enter a country"
+        className="autocomplete-input"
+        value={searchValue}
+        onFocus={onInputFocus}
+        maxLength={30}
+        onChange={onInputChange}
+      />
+
+      {renderLoader()}
+
+      {renderResultsList()}
     </form>
   );
 };
